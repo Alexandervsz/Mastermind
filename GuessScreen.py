@@ -4,6 +4,7 @@ from random import choice
 
 class GuessScreen:
     def __init__(self):
+        self.options = ["A", "B", "C", "D", "E", "F"]
         while True:
             self.opponent = input("Wil je spelen tegen een CPU of tegen een andere speler: ").lower()
             if self.opponent == "cpu" or self.opponent == "speler":
@@ -16,12 +17,22 @@ class GuessScreen:
             if self.opponent == "cpu":
                 code = self.generate_code()
             if self.opponent == "speler":
-                code = getpass("Voer je code in: ").upper()
+                while True:
+                    valid = True
+                    code = getpass("Voer je code in: ").upper()
+                    for letter in code:
+                        if letter not in self.options or len(code) != 4:
+                            valid = False
+                    if valid:
+                        break
+                    else:
+                        print("Ongelidige code!")
+
         guess = input(f"Poging {counter}: ").upper()
         feedback = self.generate_feedback(code, guess)
         if guess == code:
             print("Goed gegokt!")
-        elif counter <= 5:
+        elif counter < 6:
             print(
                 f"Je hebt {feedback[0]} op de juiste plaats en de juiste kleur, en {feedback[1]} "
                 f"van de juiste kleur alleen.")
@@ -31,10 +42,10 @@ class GuessScreen:
             print(f"Je hebt verloren! Het antwoord was: {code}.")
 
     def generate_code(self):
-        options = ["A", "B", "C", "D", "E", "F"]
+
         code = ""
         for i in range(0, 4):
-            code += choice(options)
+            code += choice(self.options)
         return code
 
     def generate_feedback(self, code, guess):
