@@ -1,8 +1,25 @@
-from GuessScreen import GuessScreen
 from AIScreen import AIScreen
-mode = int(input("Wil je de gene zijn die raadt (1) of de code bedenkt (2): "))
-if mode == 1:
-    GuessScreen().start_game()
+from GuessScreen import GuessScreen
 
-if mode == 2:
-    AIScreen()
+
+def open_beginscherm():
+    while True:
+        try:
+            mode = int(input("Wil je de gene zijn die raadt (1) of de code bedenkt (2): "))
+            if 0 <= mode < 3:
+                break
+            else:
+                print("Foutieve invoer!")
+        except ValueError:
+            print("Foutieve invoer!")
+    if mode == 1:
+        GuessScreen().start_game()
+        open_beginscherm()
+
+    if mode == 2:
+        AIScreen()
+    if mode == 0:
+        return
+
+
+open_beginscherm()
