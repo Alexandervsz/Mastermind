@@ -31,7 +31,7 @@ class GuessScreen:
         guess = input(f"Poging {counter}: ").upper()
         feedback = self.generate_feedback(code, guess)
         if guess == code:
-            print("Goed gegokt!")
+            print(f"Je hebt gewonnen! het heeft je {counter} beurten gekost.")
         elif counter < 6:
             print(
                 f"Je hebt {feedback[0]} op de juiste plaats en de juiste kleur, en {feedback[1]} "
