@@ -43,3 +43,6 @@ class CodeGenerator:
             if letter in new_code:
                 semi_hits += 1
         return [full_hits, semi_hits]
+
+    def get_random_letter(self):
+        return choice(self.options)

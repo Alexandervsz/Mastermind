@@ -15,6 +15,10 @@ class GuessScreen:
                 code = CodeGenerator().generate_random_code()
             if opponent == "speler":
                 code = CodeGenerator().get_user_code("Voer je code in: ", True)
+                """Zet in je build configurations
+                                                                                emulate terminal in output console
+                                                                                aan!"""
+
 
         print(f"Poging {counter}.")
         guess = CodeGenerator().get_user_code("Voer je gok in: ", False)
