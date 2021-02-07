@@ -1,2 +1,6 @@
+from CodeGenerator import CodeGenerator
+
+
 class AIScreen:
-    pass
+    def start_game(self):
+        code = CodeGenerator().get_user_code(True)
