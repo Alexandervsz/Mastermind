@@ -14,10 +14,10 @@ class GuessScreen:
             if opponent == "cpu":
                 code = CodeGenerator().generate_random_code()
             if opponent == "speler":
-                code = CodeGenerator().get_user_code(True)
+                code = CodeGenerator().get_user_code("Voer je code in: ", True)
 
         print(f"Poging {counter}.")
-        guess = CodeGenerator().get_user_code(False)
+        guess = CodeGenerator().get_user_code("Voer je gok in: ", False)
         feedback = CodeGenerator().generate_feedback(code, guess)
         if guess == code:
             print(f"Je hebt gewonnen! Het heeft je {counter} beurten gekost.")

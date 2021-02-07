@@ -6,13 +6,13 @@ class CodeGenerator:
     def __init__(self):
         self.options = ["A", "B", "C", "D", "E", "F"]
 
-    def get_user_code(self, invisible):
+    def get_user_code(self, bericht, invisible):
         while True:
             valid = True
             if invisible:
-                code = getpass("Voer je code in: ").upper()
+                code = getpass(bericht).upper()
             else:
-                code = input("Voer je gok in: ").upper()
+                code = input(bericht).upper()
             for letter in code:
                 if letter not in self.options or len(code) != 4:
                     valid = False

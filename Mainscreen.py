@@ -17,7 +17,9 @@ def open_beginscherm():
         open_beginscherm()
 
     if mode == 2:
-        AIScreen()
+        AIScreen().start_game()
+        open_beginscherm()
+
     if mode == 0:
         return
 
