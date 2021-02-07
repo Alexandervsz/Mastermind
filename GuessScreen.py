@@ -1,5 +1,4 @@
-from getpass import getpass
-from random import choice
+from CodeGenerator import CodeGenerator
 
 
 class GuessScreen:
@@ -15,18 +14,9 @@ class GuessScreen:
     def start_game(self, code=None, counter=1):
         if code is None:
             if self.opponent == "cpu":
-                code = self.generate_code()
+                code = CodeGenerator().generate_random_code()
             if self.opponent == "speler":
-                while True:
-                    valid = True
-                    code = getpass("Voer je code in: ").upper()
-                    for letter in code:
-                        if letter not in self.options or len(code) != 4:
-                            valid = False
-                    if valid:
-                        break
-                    else:
-                        print("Ongelidige code!")
+                code = CodeGenerator().get_user_code()
 
         guess = input(f"Poging {counter}: ").upper()
         feedback = self.generate_feedback(code, guess)
@@ -40,13 +30,6 @@ class GuessScreen:
 
         else:
             print(f"Je hebt verloren! Het antwoord was: {code}.")
-
-    def generate_code(self):
-
-        code = ""
-        for i in range(0, 4):
-            code += choice(self.options)
-        return code
 
     def generate_feedback(self, code, guess):
         full_hits = 0
