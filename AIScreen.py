@@ -2,6 +2,10 @@ from CodeGenerator import CodeGenerator
 
 
 class AIScreen:
+    def __init__(self):
+        self.guess_list = []
+        self.combinations = CodeGenerator().generate_all_options()
+
     def start_game(self, code=None, counter=1, feedback=None, algoritme=None, previous_guess=None):
         if code is None:
             code = CodeGenerator().get_user_code("Voer je code in: ", False)
@@ -25,16 +29,36 @@ class AIScreen:
         if feedback is None:
             return "ABCC"
         else:
-            full_hits = feedback[0]
-            semi_hits = feedback[1]
+            code_old = self.a_simple_strategy(feedback, prev_guess)
+            code_format = ""
+            for letter in code_old:
+                code_format += letter
+            return code_format
+
+    def completely_random_guess(self):
+        return CodeGenerator().generate_random_code()
+
+    def a_simple_strategy(self, feedback, prev_guess):
+        for combination in self.combinations:
+            full_hits = 0
+            semi_hits = 0
+            new_code = ""
             new_guess = ""
-            for letter in prev_guess:
-                if full_hits != 0:
-                    new_guess += letter
-                    full_hits -= 1
-                elif semi_hits != 0:
-                    new_guess += letter
-                    semi_hits -= 1
+            for x in range(0, 4):
+                if prev_guess[x] == combination[x]:
+                    full_hits += 1
                 else:
-                    new_guess += CodeGenerator().get_random_letter()
-            return new_guess
+                    new_code += prev_guess[x]
+                    new_guess += combination[x]
+            for letter in new_guess:
+                if letter in new_code:
+                    semi_hits += 1
+            if [full_hits, semi_hits] == feedback:
+                return combination
+
+
+
+
+
+
+

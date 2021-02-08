@@ -1,4 +1,5 @@
 from getpass import getpass
+from itertools import product
 from random import choice
 
 
@@ -46,3 +47,8 @@ class CodeGenerator:
 
     def get_random_letter(self):
         return choice(self.options)
+
+    def generate_all_options(self):
+        return product(self.options, repeat=4)
+
+
