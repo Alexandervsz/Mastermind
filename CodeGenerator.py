@@ -7,15 +7,16 @@ class CodeGenerator:
     def __init__(self):
         self.options = ["A", "B", "C", "D", "E", "F"]
 
-    def get_user_code(self, bericht, invisible):
-        """ Vraag de user om een code met doorgegeven bericht, als invisible dan kan de code niet door de
-        volgende speler worden gelezen (zet met pycharm emulate terminal in output console aan, als je deze gebruikt anders zie je niets)"""
+    def get_user_code(self, message, invisible):
+        """Asks the user for a code with message, if invisble the code is hidden from view (for multiplayer games)
+        If using pycharm dont forget to turn on emulate terminal in output console or the message won't show up"""
+
         while True:
             valid = True
             if invisible:
-                code = getpass(bericht).upper()
+                code = getpass(message).upper()
             else:
-                code = input(bericht).upper()
+                code = input(message).upper()
             for letter in code:
                 if letter not in self.options or len(code) != 4:
                     valid = False
@@ -25,14 +26,14 @@ class CodeGenerator:
                 print("Ongelidige code!")
 
     def generate_random_code(self):
-        """ Genereert een random, geldige, code"""
+        """ Generates a random, valid, code"""
         code = ""
         for i in range(0, 4):
             code += choice(self.options)
         return code
 
     def generate_feedback(self, code, guess):
-        """ Genereert feedback voor de ingegeven code + gok"""
+        """ Generate feedback for the provided code + guess"""
         full_hits = 0
         semi_hits = 0
         new_code = ""
@@ -49,11 +50,9 @@ class CodeGenerator:
         return [full_hits, semi_hits]
 
     def get_random_letter(self):
-        """Returnt een random kleur"""
+        """ Returns a random color/letter"""
         return choice(self.options)
 
     def generate_all_options(self):
-        """ Genereert alle mogelijke opties."""
+        """ Generates all possible combinations."""
         return product(self.options, repeat=4)
-
-
