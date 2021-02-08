@@ -59,10 +59,3 @@ class AIScreen:
                     semi_hits += 1
             if [full_hits, semi_hits] == feedback:
                 return combination
-
-
-
-
-
-
-
