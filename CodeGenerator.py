@@ -8,6 +8,8 @@ class CodeGenerator:
         self.options = ["A", "B", "C", "D", "E", "F"]
 
     def get_user_code(self, bericht, invisible):
+        """ Vraag de user om een code met doorgegeven bericht, als invisible dan kan de code niet door de
+        volgende speler worden gelezen (zet met pycharm emulate terminal in output console aan, als je deze gebruikt anders zie je niets)"""
         while True:
             valid = True
             if invisible:
@@ -23,13 +25,14 @@ class CodeGenerator:
                 print("Ongelidige code!")
 
     def generate_random_code(self):
-
+        """ Genereert een random, geldige, code"""
         code = ""
         for i in range(0, 4):
             code += choice(self.options)
         return code
 
     def generate_feedback(self, code, guess):
+        """ Genereert feedback voor de ingegeven code + gok"""
         full_hits = 0
         semi_hits = 0
         new_code = ""
@@ -46,9 +49,11 @@ class CodeGenerator:
         return [full_hits, semi_hits]
 
     def get_random_letter(self):
+        """Returnt een random kleur"""
         return choice(self.options)
 
     def generate_all_options(self):
+        """ Genereert alle mogelijke opties."""
         return product(self.options, repeat=4)
 
 

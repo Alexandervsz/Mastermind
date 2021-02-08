@@ -3,6 +3,7 @@ from GuessScreen import GuessScreen
 
 
 def open_beginscherm():
+    """ Opent het beignscherm."""
     while True:
         try:
             mode = int(input("Wil je de gene zijn die raadt (1) of de code bedenkt (2): "))

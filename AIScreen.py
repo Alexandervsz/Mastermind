@@ -7,6 +7,7 @@ class AIScreen:
         self.combinations = CodeGenerator().generate_all_options()
 
     def start_game(self, code=None, counter=1, feedback=None, algoritme=None, previous_guess=None):
+        """Start het spel op, of de volgende ronde."""
         if code is None:
             code = CodeGenerator().get_user_code("Voer je code in: ", False)
         if algoritme is None:
@@ -26,6 +27,7 @@ class AIScreen:
             print("Speler wint!")
 
     def guess_standard(self, prev_guess, feedback=None):
+        """ Stuur vooralsnog de AI aan"""
         if feedback is None:
             return "ABCC"
         else:
@@ -36,9 +38,11 @@ class AIScreen:
             return code_format
 
     def completely_random_guess(self):
+        """ Zoals titel"""
         return CodeGenerator().generate_random_code()
 
     def a_simple_strategy(self, feedback, prev_guess):
+        """ A simple strategy algoritme uit het artikel"""
         for combination in self.combinations:
             full_hits = 0
             semi_hits = 0
