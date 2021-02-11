@@ -44,6 +44,7 @@ class AIScreen:
     def a_simple_strategy(self, feedback, prev_guess):
         """ A simple strategy algorithm, from article."""
         for combination in self.combinations:
+            hits = CodeGenerator().generate_feedback(combination, prev_guess)
             full_hits = 0
             semi_hits = 0
             new_code = ""
@@ -59,7 +60,4 @@ class AIScreen:
                     semi_hits += 1
             if [full_hits, semi_hits] == feedback:
                 return combination
-        
-        # Soms is het wel wat moeilijk te volgen
-        # Het is ook een beetje onoverzichtelijk
-        # Voor de rest ziet alles er echt goed uit!
+

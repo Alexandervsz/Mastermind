@@ -8,7 +8,7 @@ class CodeGenerator:
         self.options = ["A", "B", "C", "D", "E", "F"]
 
     def get_user_code(self, message, invisible):
-        """Asks the user for a code with message, if invisble the code is hidden from view (for multiplayer games)
+        """Asks the user for a code with message, if invisible the code is hidden from view (for multiplayer games)
         If using pycharm dont forget to turn on emulate terminal in output console or the message won't show up"""
 
         while True:
