@@ -46,7 +46,7 @@ class AIScreen:
         if feedback is None:
             return "AABC"
         else:
-            code = self.a_simple_strategy(feedback, prev_guess, "simple")
+            code = self.a_simple_strategy(feedback, prev_guess)
             return code
 
     def guess_oneStep(self, prev_guess, feedback=None):
@@ -54,56 +54,47 @@ class AIScreen:
             return "AABC"
         else:
             print(self.combinations)
-            comb_list = []
-            feedback_list = [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [1, 0], [1, 1], [1, 2], [1, 3], [2, 0], [2, 1],
-                             [2, 2], [3, 0], [4, 0]]
-
-            for feedback2 in feedback_list:
-                for combination in self.combinations:
-                    pass
-                    #comb_dict[(combination,'feedback')] = feedback2
-                    #comb_dict[(combination,'possibilities')] = self.a_simple_strategy_2(feedback2, combination)
-
-                    comb_list.append([self.a_simple_strategy_2(feedback2, combination), feedback2, combination])
+            if len(self.combinations) == 1:
+                return self.combinations[0]
+            posiblity_list = []
+            for combination in self.combinations:
+                possibilities = len(self.generate_temp_combinations(feedback, combination))
+                if possibilities != 0:
+                    posiblity_list.append([combination, possibilities ])
+            print(posiblity_list)
             smallest = None
-            for combination in comb_list:
-                print(combination[0])
-                print(smallest)
+            for posiblity in posiblity_list:
                 if smallest is None:
-                    smallest = combination[0]
-                elif combination[0] < smallest:
-                    smallest = combination[0]
-            code = ""
-            for combination in comb_list:
-                if combination[0] == smallest:
-                    code = combination[3]
+                    smallest = posiblity[1]
+                elif posiblity[1] < smallest:
+                    smallest = posiblity[1]
+            guess= None
+            for posiblity in posiblity_list:
+                if posiblity[1] == smallest:
+                    temp_combinations = self.generate_temp_combinations(feedback, prev_guess)
+                    self.combinations = temp_combinations
+                    guess = posiblity[0]
                     break
-            return code
-
-
-            print(comb_list)
+            if guess is not None:
+                return guess
+            else:
+                return self.combinations[0]
 
     def completely_random_guess(self):
         """ Returns a random guess"""
         return CodeGenerator().generate_random_code()
 
-    def a_simple_strategy(self, feedback, prev_guess, mode):
+    def a_simple_strategy(self, feedback, prev_guess):
         """ A simple strategy algorithm, from article."""
+
+        temp_combinations = self.generate_temp_combinations(feedback, prev_guess)
+        self.combinations = temp_combinations
+        return self.combinations[0]
+
+    def generate_temp_combinations(self, feedback, prev_guess):
         temp_combinations = []
         for combination in self.combinations:
             hits = CodeGenerator().generate_feedback(combination, prev_guess)
             if [hits[0], hits[1]] == feedback:
                 temp_combinations.append(combination)
-
-
-        self.combinations = temp_combinations
-        return self.combinations[0]
-
-    def a_simple_strategy_2(self, feedback, guess):
-        temp_combinations = []
-        for combination in self.combinations:
-            hits = CodeGenerator().generate_feedback(combination, guess)
-            if [hits[0] , hits[1]] == feedback:
-                temp_combinations.append(combination)
-        return  len(temp_combinations)
-
+        return temp_combinations
