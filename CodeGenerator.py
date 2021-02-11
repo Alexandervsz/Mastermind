@@ -18,9 +18,9 @@ class CodeGenerator:
             else:
                 code = input(message).upper()
             for letter in code:
-                if letter not in self.options or len(code) != 4:
+                if letter not in self.options:
                     valid = False
-            if valid:
+            if valid and len(code) == 4:
                 return code
             else:
                 print("Ongelidige code!")

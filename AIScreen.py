@@ -4,7 +4,13 @@ from CodeGenerator import CodeGenerator
 class AIScreen:
     def __init__(self):
         self.guess_list = []
-        self.combinations = CodeGenerator().generate_all_options()
+        combinations = CodeGenerator().generate_all_options()
+        self.combinations = []
+        for combination in combinations:
+            combination_letters = ""
+            for letter in combination:
+                combination_letters += letter
+            self.combinations.append(combination_letters)
 
     def start_game(self, code=None, counter=1, feedback=None, algoritme=None, previous_guess=None):
         """Starts the game, or the next round."""
@@ -31,11 +37,8 @@ class AIScreen:
         if feedback is None:
             return "ABCC"
         else:
-            code_old = self.a_simple_strategy(feedback, prev_guess)
-            code_format = ""
-            for letter in code_old:
-                code_format += letter
-            return code_format
+            code = self.a_simple_strategy(feedback, prev_guess)
+            return code
 
     def completely_random_guess(self):
         """ Returns a radom guess"""
@@ -43,21 +46,12 @@ class AIScreen:
 
     def a_simple_strategy(self, feedback, prev_guess):
         """ A simple strategy algorithm, from article."""
+        temp_combinations = []
         for combination in self.combinations:
             hits = CodeGenerator().generate_feedback(combination, prev_guess)
-            full_hits = 0
-            semi_hits = 0
-            new_code = ""
-            new_guess = ""
-            for x in range(0, 4):
-                if prev_guess[x] == combination[x]:
-                    full_hits += 1
-                else:
-                    new_code += prev_guess[x]
-                    new_guess += combination[x]
-            for letter in new_guess:
-                if letter in new_code:
-                    semi_hits += 1
-            if [full_hits, semi_hits] == feedback:
-                return combination
+            if [hits[0], hits[1]] == feedback:
+                temp_combinations.append(combination)
+        self.combinations = temp_combinations
+        return self.combinations[0]
+
 
