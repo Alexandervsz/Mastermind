@@ -33,7 +33,7 @@ class CodeGenerator:
         return code
 
     def generate_feedback(self, code, guess):
-        """ Generate feedback for the provided code + guess"""
+        """ returns feedback for the provided code + guess"""
         full_hits = 0
         semi_hits = 0
         new_code = ""

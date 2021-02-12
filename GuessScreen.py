@@ -4,7 +4,7 @@ from CodeGenerator import CodeGenerator
 class GuessScreen:
 
     def start_game(self, code=None, counter=1):
-        """" Start the game / next round"""
+        """" Start the game / next round up to 6 rounds."""
         if code is None:
             while True:
                 opponent = input("Wil je spelen tegen een CPU of tegen een andere speler: ").lower()
