@@ -140,7 +140,6 @@ class AIScreen:
             feedback = float(f"{feedback[0]}.{feedback[1]}")
             if feedback > highest and combination:
                 highest = feedback
-        print(highest)
         if highest == 0:
             while True:
                 choice = random.choice(self.combinations)
@@ -153,6 +152,5 @@ class AIScreen:
             feedback = CodeGenerator().generate_feedback(combination, prev_guess)
             feedback = float(f"{feedback[0]}.{feedback[1]}")
             if feedback == highest:
-                print(combination)
                 self.prev_guesses.append(combination)
                 return combination
