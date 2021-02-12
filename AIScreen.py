@@ -1,3 +1,5 @@
+import random
+
 from CodeGenerator import CodeGenerator
 
 
@@ -6,6 +8,7 @@ class AIScreen:
         self.guess_list = []
         combinations = CodeGenerator().generate_all_options()
         self.combinations = []
+        self.prev_guesses = []
         for combination in combinations:
             combination_letters = ""
             for letter in combination:
@@ -17,17 +20,26 @@ class AIScreen:
         if code is None:
             code = CodeGenerator().get_user_code("Voer je code in: ", False)
         if algoritme is None:
-            print("mogelijke algortimes: Simple, OneStep")
+            algoritmes = ["SIMPLE", "ONESTEP", "EXPSIZE", "DIFFERENT"]
+            letters = ["S", "O", "E", "D"]
+            print("Mogelijke algortimes:")
+            for algoritme in algoritmes:
+                print(algoritme.capitalize())
             while True:
-                algoritme = input("Welk gok-algoritme wil je gebruiken?").upper()  # unimplemented.
-                if algoritme == "SIMPLE" or algoritme == "ONESTEP":
+                algoritme = input("Welk gok-algoritme wil je gebruiken: ").upper()
+
+                if algoritme in algoritmes or algoritme in letters:
                     break
                 else:
                     print("foutieve input!")
-        if algoritme == "SIMPLE":
+        if algoritme == "SIMPLE" or algoritme == "S":
             guess = self.guess_standard(previous_guess, feedback)
-        if algoritme == "ONESTEP":
+        if algoritme == "ONESTEP" or algoritme == "O":
             guess = self.guess_oneStep(previous_guess, feedback)
+        if algoritme == "EXPSIZE" or algoritme == "E":
+            guess = self.guess_expsize(previous_guess, feedback)
+        if algoritme == "DIFFERENT" or algoritme == "D":
+            guess = self.a_different_strategy(feedback, previous_guess)
         print(f"Ronde {counter}.")
         print(f"Computer gokt: {guess}")
         if code == guess:
@@ -51,50 +63,96 @@ class AIScreen:
 
     def guess_oneStep(self, prev_guess, feedback=None):
         if feedback is None:
-            return "AABC"
+            return "AABB"
         else:
-            print(self.combinations)
-            if len(self.combinations) == 1:
-                return self.combinations[0]
-            posiblity_list = []
+            codedict = {}
             for combination in self.combinations:
-                possibilities = len(self.generate_temp_combinations(feedback, combination))
-                if possibilities != 0:
-                    posiblity_list.append([combination, possibilities ])
-            print(posiblity_list)
-            smallest = None
-            for posiblity in posiblity_list:
-                if smallest is None:
-                    smallest = posiblity[1]
-                elif posiblity[1] < smallest:
-                    smallest = posiblity[1]
-            guess= None
-            for posiblity in posiblity_list:
-                if posiblity[1] == smallest:
-                    temp_combinations = self.generate_temp_combinations(feedback, prev_guess)
-                    self.combinations = temp_combinations
-                    guess = posiblity[0]
-                    break
-            if guess is not None:
-                return guess
-            else:
-                return self.combinations[0]
+                options = len(self.generate_temp_combinations(feedback, combination))
 
-    def completely_random_guess(self):
-        """ Returns a random guess"""
-        return CodeGenerator().generate_random_code()
+                if options != 0:
+                        codedict[combination] = options
+
+            try:
+                min(codedict, key=codedict.get)
+            except ValueError:
+                return self.combinations[0]
+            if min(codedict, key=codedict.get) != prev_guess:
+                self.a_simple_strategy(feedback, prev_guess)
+                return min(codedict, key=codedict.get)
+            else:
+                self.combinations.pop(0)
+                return self.combinations[0]
 
     def a_simple_strategy(self, feedback, prev_guess):
-        """ A simple strategy algorithm, from article."""
+        """ A simple strategy algorithm, from article YET ANOTHER MASTERMIND STRATEGY by Barteld Kooi."""
 
         temp_combinations = self.generate_temp_combinations(feedback, prev_guess)
         self.combinations = temp_combinations
         return self.combinations[0]
 
-    def generate_temp_combinations(self, feedback, prev_guess):
+    def guess_expsize(self, prev_guess, feedback=None):
+        if feedback is None:
+            return "AABC"
+        combdict = {}
+        feedbacklist = [[0,0], [0,1] ,[0,2], [0,3], [0,4], [1,0], [1,1], [1,2], [1,3],[2,0],[2,1],[2,2],[3,0],[4,0]]
+        for combination in self.combinations:
+            for newfeedback in feedbacklist:
+                if len(self.generate_temp_combinations(newfeedback, combination)) != 0:
+                    try:
+                        combdict[combination].append([newfeedback, len(self.generate_temp_combinations(newfeedback,combination))])
+                    except KeyError:
+                        combdict[combination] = [newfeedback, len(self.generate_temp_combinations(newfeedback,combination))]
+        highestdict = {}
+        for combination in combdict:
+            highest = 0
+            if combdict[combination][1] > highest:
+                highest = combdict[combination][1]
+            highestdict[combination] = highest
+        for value in highestdict:
+            highestdict[value] = int(highestdict[value]) * int(highestdict[value]) / len(self.combinations)
+        best = min(highestdict, key=highestdict.get)
+        self.a_simple_strategy(feedback, prev_guess)
+        return best
+
+    def generate_temp_combinations(self, feedback, guess):
+        """ This function checks whether the guess is valid according to the feedback."""
         temp_combinations = []
         for combination in self.combinations:
-            hits = CodeGenerator().generate_feedback(combination, prev_guess)
-            if [hits[0], hits[1]] == feedback:
+
+            if CodeGenerator().generate_feedback(combination, guess) == feedback:
                 temp_combinations.append(combination)
         return temp_combinations
+
+    def a_different_strategy(self, feedback, prev_guess):
+        """ A different strategy, looks at whichever combination scores the highest
+        then uses that combination as a guess. If no combination can be found, a
+        random guess is used."""
+        if feedback is None:
+            return "AABC"
+        combination_list = self.generate_temp_combinations(feedback, prev_guess)
+        highest = 0
+        combination_list2 = []
+        for combination in combination_list:
+            if combination not in self.prev_guesses:
+                combination_list2.append(combination)
+        for combination in combination_list2:
+            feedback = CodeGenerator().generate_feedback(combination, prev_guess)
+            feedback = float(f"{feedback[0]}.{feedback[1]}")
+            if feedback > highest and combination:
+                highest = feedback
+        print(highest)
+        if highest == 0:
+            while True:
+                choice = random.choice(self.combinations)
+                if choice not in self.prev_guesses:
+                    break
+            self.prev_guesses.append(choice)
+            self.combinations.pop(self.combinations.index(choice))
+            return choice
+        for combination in combination_list2:
+            feedback = CodeGenerator().generate_feedback(combination, prev_guess)
+            feedback = float(f"{feedback[0]}.{feedback[1]}")
+            if feedback == highest:
+                print(combination)
+                self.prev_guesses.append(combination)
+                return combination

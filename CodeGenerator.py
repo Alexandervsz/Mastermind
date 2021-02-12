@@ -44,8 +44,6 @@ class CodeGenerator:
             else:
                 new_code += code[x]
                 new_guess += guess[x]
-        #print(new_code)
-        #print(new_guess)
         used_letters = ""
         for letter in new_guess:
             if letter in new_code and letter not in used_letters:
