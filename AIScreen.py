@@ -44,7 +44,7 @@ class AIScreen:
         print(f"Computer gokt: {guess}")
         if code == guess:
             print(f"CPU wint in {counter} beurten!")
-        elif counter < 6:
+        elif counter < 10:
 
             feedback = CodeGenerator().generate_feedback(code, guess)
             print(f"{feedback[0]} full hits, {feedback[1]} semi hits")
@@ -54,7 +54,7 @@ class AIScreen:
             print("Speler wint!")
 
     def guess_standard(self, prev_guess, feedback=None):
-        """ Starts up AI"""
+        """ Generates a guess according to the simple algorithm"""
         if feedback is None:
             return "AABC"
         else:
@@ -62,6 +62,8 @@ class AIScreen:
             return code
 
     def guess_oneStep(self, prev_guess, feedback=None):
+        """ Looks how long the list gets according to each possible guess, then returns the guess
+         which creates the shortest list."""
         if feedback is None:
             return "AABB"
         else:
@@ -80,6 +82,8 @@ class AIScreen:
                 self.a_simple_strategy(feedback, prev_guess)
                 return min(codedict, key=codedict.get)
             else:
+                # multiple options with same length
+
                 self.combinations.pop(0)
                 return self.combinations[0]
 
@@ -91,6 +95,7 @@ class AIScreen:
         return self.combinations[0]
 
     def guess_expsize(self, prev_guess, feedback=None):
+        """ calculates the expected size for all guesses, then returns the smallest (best)"""
         if feedback is None:
             return "AABC"
         combdict = {}
@@ -128,7 +133,7 @@ class AIScreen:
         then uses that combination as a guess. If no combination can be found, a
         random guess is used."""
         if feedback is None:
-            return "AABC"
+            return "ABCD"
         combination_list = self.generate_temp_combinations(feedback, prev_guess)
         highest = 0
         combination_list2 = []
